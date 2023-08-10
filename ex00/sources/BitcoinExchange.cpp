@@ -17,12 +17,12 @@ BitcoinExchange::BitcoinExchange() {
 }
 
 BitcoinExchange::BitcoinExchange(std::string const & databaseFilename) {
-	std::cout << BLUE"BitcoinExchange constructor called\n";
+	std::cout << BLUE"BitcoinExchange constructor called\n"R;
 	readFile(databaseFilename);
 }
 
 BitcoinExchange::~BitcoinExchange() {
-	std::cout << "BitcoinExchange default destructor called\n";
+	std::cout << MAGENTA"BitcoinExchange default destructor called\n"R;
 }
 
 BitcoinExchange::BitcoinExchange(BitcoinExchange const &other) : _db(other._db) {
