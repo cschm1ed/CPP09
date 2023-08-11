@@ -10,13 +10,13 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME		:= templates
+NAME		:= RPN
 
 VPATH		:= sources
 
 BUILDDIR	:= build
 
-SRCS		:= main.cpp
+SRCS		:= main.cpp RPN.cpp
 OBJS		:= $(SRCS:%.cpp=$(BUILDDIR)/%.o)
 
 CFLAGS		:= -Wall -Werror -Wextra -g -I includes -std=c++98 -pedantic
