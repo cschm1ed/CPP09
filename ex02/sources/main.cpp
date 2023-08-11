@@ -18,6 +18,7 @@
 #include <PmergeMe.tpp>
 
 int main(int argc, char **argv) {
+	long timeVec, timeDeq;
 	std::vector<int> vec;
 	std::deque<int> deq;
 
@@ -29,10 +30,15 @@ int main(int argc, char **argv) {
 
 	PmergeMe::fillContainer(vec, argv + 1);
 	PmergeMe::fillContainer(deq, argv + 1);
-
 	std::cout << BLUE"Before:\t"R;
 	PmergeMe::printContainer(vec);
-
-
+	timeVec = PmergeMe::measureSortTime(vec);
+	timeDeq = PmergeMe::measureSortTime(deq);
+	std::cout << MAGENTA"After:\t"R;
+	PmergeMe::printContainer(vec);
+	std::cout << "Time to process a range of " << vec.size() << " elements with std::vector<int> : " << timeVec
+			  << " us\n"R;
+	std::cout << "Time to process a range of " << deq.size() << " elements with std::deque<int> : " << timeDeq
+			  << " us\n"R;
 	return 0;
 }

@@ -49,5 +49,6 @@ bool PmergeMe::isInt(char *str) {
 		return false;
 	if (n < 0 || n > std::numeric_limits<int>::max() || static_cast<int>(n) != n)
 		return (false);
+
 	return true;
 }

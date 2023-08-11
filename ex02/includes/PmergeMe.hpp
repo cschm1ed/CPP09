@@ -15,6 +15,8 @@
 
 #include <iostream>
 #include <colors.hpp>
+#include <vector>
+#include <deque>
 
 class PmergeMe {
 
@@ -34,6 +36,16 @@ public:
 	template<typename T>
 	static void printContainer(const T &container);
 
+	template<typename T>
+	static double FJMIS(T & cont);
+
+	template<typename T>
+	static long measureSortTime(T & cont);
+
+	static void mergeSortVector(std::vector<std::vector<int> > & vec);
+	static void binaryInsertionSortVector(std::vector<int> & dst, std::vector<int> & src);
+
+	friend std::ostream &operator<<(std::ostream &os, const PmergeMe &me);
 
 private:
 
