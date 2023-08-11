@@ -13,7 +13,6 @@
 #include <iostream>
 #include <BitcoinExchange.hpp>
 #include <cstdlib>
-#include <sstream>
 #include <cstring>
 
 #define MAX_PRICE 1000
@@ -27,11 +26,11 @@ void printError(const int errorCode, const char *line);
 
 int main(int argc, char **argv) {
 	BitcoinExchange*	coinBase = nullptr;
+
 	if (argc != 2) {
 		std::cerr << SYS_MSG <<  RED"ERROR: wrong amount of arguments\n"R;
 		return 1;
 	}
-
 	try {
 		coinBase = new BitcoinExchange(DATABASE);
 	} catch (std::exception & e) {
@@ -39,7 +38,6 @@ int main(int argc, char **argv) {
 		delete coinBase;
 		return 1;
 	}
-
 	if (fetchDates(argv[1], *coinBase) == false) {
 		delete coinBase;
 		return 1;
@@ -52,7 +50,7 @@ int main(int argc, char **argv) {
 bool fetchDates(std::string const & filename, BitcoinExchange & exchange) {
 	std::ifstream infile(filename, std::ios_base::in);
 	std::string line;
-	char date[100];
+	char date[1000];
 	int numCharsRead, errorCode;
 	float numericValue = -1;
 	bool first = true;
@@ -63,26 +61,32 @@ bool fetchDates(std::string const & filename, BitcoinExchange & exchange) {
 	}
 	while (getline(infile, line)) {
 		errorCode = 0;
-		if (!(first && line == "date | value")) {
-			if (line.length() < 1000) {
-				if (sscanf(line.c_str(), "%11s | %f%n", date, &numericValue, &numCharsRead) == 2) {
-					if (numCharsRead != static_cast<int>(line.length())) {
-						errorCode = 1;
-					}
-					isValidDate(date, errorCode);
-					isValidPrice(numericValue, errorCode);
-				} else
-					errorCode = 1;
-			}
-			else
-				errorCode = 5;
-			if (errorCode) {
-				printError(errorCode, line.c_str());
-			} else {
-				float realValue = exchange.getPrice(date) * numericValue;
-				std::cout << date << " => " << numericValue << " = " << realValue << "\n";
-			}
+
+		if (first && line == "date | value") {
+			first = false;
+			continue;
 		}
+
+		if (line.length() > 1000) {
+			printError(5, line.c_str());
+			continue ;
+		}
+
+		if (sscanf(line.c_str(), "%11s | %f%n", date, &numericValue, &numCharsRead) != 2
+			|| numCharsRead != static_cast<int>(line.length())) {
+			printError(1, line.c_str());
+			continue;
+		}
+
+		isValidDate(date, errorCode);
+		isValidPrice(numericValue, errorCode);
+		if (errorCode) {
+			printError(errorCode, line.c_str());
+			continue;
+		}
+
+		float realValue = exchange.getPrice(date) * numericValue;
+		std::cout << date << " => " << numericValue << " = " << realValue << "\n";
 		first = false;
 	}
 	return true;
