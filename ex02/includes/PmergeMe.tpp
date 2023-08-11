@@ -10,38 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CPP09_PMERGEME_HPP
-#define CPP09_PMERGEME_HPP
+#include <PmergeMe.hpp>
 
-#include <iostream>
-#include <colors.hpp>
+template<typename T>
+void PmergeMe::fillContainer(T &container, char **argv) {
+	int n;
+	char *pEnd;
 
-class PmergeMe {
+	for (int i = 0; argv[i]; ++i) {
+		n = static_cast<int>(strtod(argv[i], &pEnd));
+		container.push_back(n);
+	}
+}
 
-public:
+template<typename T>
+void PmergeMe::printContainer(const T &container) {
+	std::vector<int>::const_iterator it;
 
-	PmergeMe(PmergeMe const &other);
-
-	~PmergeMe();
-
-	PmergeMe &operator=(PmergeMe const &rhs);
-
-	static bool checkArgs(char **argv);
-
-	template<typename T>
-	static void fillContainer(T &container, char **argv);
-
-	template<typename T>
-	static void printContainer(const T &container);
-
-
-private:
-
-	static bool isInt(char *str);
-
-	PmergeMe();
-
-};
-
-
-#endif //CPP09_PMERGEME_HPP
+	for (it = container.begin(); it != container.end() && it - container.begin() < 5; ++it) {
+		std::cout << *it << " ";
+	}
+	if (it != container.end()) {
+		std::cout << "[...]";
+	}
+	std::cout << "\n";
+}

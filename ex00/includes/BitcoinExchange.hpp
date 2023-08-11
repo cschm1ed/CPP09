@@ -25,7 +25,7 @@ class BitcoinExchange {
 
 public:
 
-	BitcoinExchange(std::string const & databaseFilename);
+	BitcoinExchange(std::string const &databaseFilename);
 
 	BitcoinExchange(BitcoinExchange const &other);
 
@@ -37,13 +37,14 @@ public:
 		const char *what() const _NOEXCEPT;
 	};
 
-	float getPrice(std::string const & date);
+	float getPrice(std::string const &date);
 
 private:
 	BitcoinExchange();
-	std::map<std::string, float>	_db;
 
-	void readFile(std::string const & filename);
+	std::map<std::string, float> _db;
+
+	void readFile(std::string const &filename);
 
 
 };

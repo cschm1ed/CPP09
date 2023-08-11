@@ -16,7 +16,7 @@ BitcoinExchange::BitcoinExchange() {
 	std::cout << "BitcoinExchange default constructor called\n";
 }
 
-BitcoinExchange::BitcoinExchange(std::string const & databaseFilename) {
+BitcoinExchange::BitcoinExchange(std::string const &databaseFilename) {
 	std::cout << BLUE"BitcoinExchange constructor called\n"R;
 	readFile(databaseFilename);
 }
@@ -40,7 +40,7 @@ const char *BitcoinExchange::openFileFailure::what() const throw() {
 	return "ERROR: could not open file 'data.csv'\n";
 }
 
-void BitcoinExchange::readFile(std::string const & filename) {
+void BitcoinExchange::readFile(std::string const &filename) {
 	std::string line, date, price;
 	char *pEnd;
 	std::ifstream ifstream(filename, std::ios_base::in);
@@ -59,7 +59,7 @@ float BitcoinExchange::getPrice(const std::string &date) {
 	std::map<std::string, float>::const_iterator it = _db.upper_bound(date);
 
 	if (it != _db.begin()) {
-		it --;
+		it--;
 	}
 	return it->second;
 }

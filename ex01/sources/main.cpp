@@ -16,7 +16,7 @@
 
 int main(int argc, char **argv) {
 	std::string strToken;
-	RPN	rpn;
+	RPN rpn;
 
 	if (argc != 2) {
 		std::cout << SYS << RED"ERROR: please provide one argument to perform calculations\n"R;
@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 	while (getline(ss, strToken, ' ')) {
 		try {
 			rpn.addToken(strToken);
-		} catch (std::exception & e) {
+		} catch (std::exception &e) {
 			std::cerr << SYS_MSG << RED << e.what() << "\n"R;
 			return 0;
 		}

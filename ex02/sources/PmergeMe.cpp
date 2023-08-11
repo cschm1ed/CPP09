@@ -22,15 +22,17 @@ PmergeMe::~PmergeMe() {
 }
 
 PmergeMe::PmergeMe(PmergeMe const &other) {
+	(void) other;
 	std::cout << "PmergeMe copy constructor called\n";
 }
 
 PmergeMe &PmergeMe::operator=(PmergeMe const &rhs) {
+	(void) rhs;
 	return *this;
 }
 
 bool PmergeMe::checkArgs(char **argv) {
-	for (int i = 1; argv[i]; ++i) {
+	for (int i = 0; argv[i]; ++i) {
 		if (!isInt(argv[i])) {
 			std::cout << RED"Error: invalid input --> " << argv[i] << "\n"R;
 			return false;
@@ -40,12 +42,12 @@ bool PmergeMe::checkArgs(char **argv) {
 }
 
 bool PmergeMe::isInt(char *str) {
-	 char *pEnd;
-	 double n = strtod(str, &pEnd);
+	char *pEnd;
+	double n = strtod(str, &pEnd);
 
-	 if (*pEnd || !*str)
-		 return false;
-	 if (n < std::numeric_limits<int>::min() || n > std::numeric_limits<int>::max())
-		 return (false);
-	 return true;
+	if (*pEnd || !*str)
+		return false;
+	if (n < 0 || n > std::numeric_limits<int>::max() || static_cast<int>(n) != n)
+		return (false);
+	return true;
 }

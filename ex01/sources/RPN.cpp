@@ -36,8 +36,7 @@ std::string RPN::getResult() const {
 
 	if (_stack.size() > 1) {
 		return YELLOW"Error: No definitive result."R;
-	}
-	else if (_stack.size() == 0) {
+	} else if (_stack.size() == 0) {
 		return YELLOW"Error: stack is empty"R;
 	}
 	ss << _stack.top();
@@ -74,36 +73,35 @@ void RPN::addToken(const std::string &token) {
 		switch (token[0]) {
 			case '*':
 				_stack.push(a * b);
-				return ;
+				return;
 			case '/':
 				if (b == 0) {
 					throw DivisionByZeroException();
 				}
 				_stack.push(a / b);
-				return ;
+				return;
 			case '-':
 				_stack.push(a - b);
-				return ;
+				return;
 			case '+':
 				_stack.push(a + b);
-				return ;
+				return;
 			default:
 				throw InvalidTokenException();
 		}
-	}
-	else {
+	} else {
 		_stack.push(strtod(token.c_str(), &pEnd));
 	}
 }
 
-const char * RPN::InvalidTokenException::what() const throw() {
+const char *RPN::InvalidTokenException::what() const throw() {
 	return "Error: tried to add invalid token.";
 }
 
-const char * RPN::DivisionByZeroException::what() const throw() {
+const char *RPN::DivisionByZeroException::what() const throw() {
 	return "Error: attempted division by zero.";
 }
 
-const char * RPN::InvalidOperatorAdd::what() const throw() {
+const char *RPN::InvalidOperatorAdd::what() const throw() {
 	return "Error: tried to add operate on only one number.";
 }

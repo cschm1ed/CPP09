@@ -17,6 +17,7 @@
 #include <stack>
 #include <sstream>
 #include <colors.hpp>
+
 class RPN {
 
 public:
@@ -28,17 +29,17 @@ public:
 
 	RPN &operator=(RPN const &rhs);
 
-	void addToken(std::string const & token);
+	void addToken(std::string const &token);
 
 	std::string getResult() const;
 
 	class InvalidTokenException : public std::exception {
-		const char * what() const _NOEXCEPT;
+		const char *what() const _NOEXCEPT;
 	};
 
-class DivisionByZeroException : public std::exception {
-	const char *what() const _NOEXCEPT;
-};
+	class DivisionByZeroException : public std::exception {
+		const char *what() const _NOEXCEPT;
+	};
 
 	class InvalidOperatorAdd : public std::exception {
 		const char *what() const _NOEXCEPT;
@@ -46,7 +47,8 @@ class DivisionByZeroException : public std::exception {
 
 private:
 
-	bool tokenIsValid(std::string const & token, bool &isOperator) const;
+	bool tokenIsValid(std::string const &token, bool &isOperator) const;
+
 	std::stack<double> _stack;
 
 };
