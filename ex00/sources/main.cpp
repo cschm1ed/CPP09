@@ -53,7 +53,7 @@ bool fetchDates(std::string const & filename, BitcoinExchange & exchange) {
 	std::ifstream infile(filename, std::ios_base::in);
 	std::string line;
 	char date[11];
-	int numCharsRead, errorCode = 0;
+	int numCharsRead, errorCode;
 	float numericValue = -1;
 
 	if (!infile) {
@@ -61,20 +61,21 @@ bool fetchDates(std::string const & filename, BitcoinExchange & exchange) {
 		return false;
 	}
 	while (getline(infile, line)) {
+		errorCode = 0;
 		if (sscanf(line.c_str(), "%11s | %f%n", date, &numericValue, &numCharsRead) == 2) {
 			if (numCharsRead != static_cast<int>(line.length())){
-				errorCode = 1;
+				errorCode = 20;
 			}
 			isValidDate(date, errorCode);
 			isValidPrice(numericValue, errorCode);
 		}
 		else
-			errorCode = 1;
+			errorCode = 10;
 		if (errorCode) {
 			printError(errorCode, line.c_str());
 		}
 		else {
-			float realValue = exchange.getPrice(date);
+			float realValue = exchange.getPrice(date) * numericValue;
 			std::cout << date << " => " << numericValue << " = " << realValue << "\n";
 		}
 	}
@@ -82,8 +83,9 @@ bool fetchDates(std::string const & filename, BitcoinExchange & exchange) {
 }
 
 void printError(const int errorCode, const char *line) {
-	std::string errorMessages[] = {"bad input => ", "invalid date => ", "not a positive number =>", "too large a number =>"};
+	std::string errorMessages[] = {"bad input => ", "invalid date => ", "not a positive number => ", "too large a number =>"};
 
+	//std::cout << errorCode << " " << line <<"\n";
 	std::cout << RED"Error: "R << errorMessages[errorCode - 1] << line << "\n";
 }
 
@@ -95,29 +97,25 @@ void isValidPrice(const float price, int & errorCode) {
 void isValidDate(const char *date, int &errorCode) {
 	int year, month, day, charsRead;
 
-	if (date[11] || !date[10]) {
-		errorCode = 1;
-		return ;
-	}
 	if (sscanf(date, "%4d-%2d-%2d%n", &year,  &month, &day, &charsRead) != 3) {
-		errorCode = 2;
+		errorCode = 3;
 		return ;
 	}
 	if (charsRead != 10) {
 		std::cout << "chars read";
-		errorCode = 2;
+		errorCode = 4;
 		return ;
 	}
 	if (year < 0 || year > 9999) {
-		errorCode = 2;
+		errorCode = 5;
 		return ;
 	}
 	if (month < 0 || month > 31) {
-		errorCode = 2;
+		errorCode = 6;
 		return ;
 	}
 	if (day < 0 || day > 31) {
-		errorCode = 2;
+		errorCode = 7;
 		return ;
 	}
 }
