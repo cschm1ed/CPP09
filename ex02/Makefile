@@ -10,13 +10,13 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME		:= templates
+NAME		:= PmergeMe
 
 VPATH		:= sources
 
 BUILDDIR	:= build
 
-SRCS		:= main.cpp
+SRCS		:= main.cpp PmergeMe.cpp
 OBJS		:= $(SRCS:%.cpp=$(BUILDDIR)/%.o)
 
 CFLAGS		:= -Wall -Werror -Wextra -g -I includes -std=c++98 -pedantic
