@@ -13,8 +13,17 @@
 #include <iostream>
 #include <BitcoinExchange.hpp>
 #include <cstdlib>
+#include <sstream>
+#include <cstring>
+
+#define MAX_PRICE 1000
+#define MIN_PRICE 0
+#define DATABASE "data.csv"
 
 bool fetchDates(std::string const & filename, BitcoinExchange & exchange);
+void isValidDate(const char *str, int &errorCode);
+void isValidPrice(const float price, int &errorCode);
+void printError(const int errorCode, const char *line);
 
 int main(int argc, char **argv) {
 	BitcoinExchange*	coinBase = nullptr;
@@ -24,7 +33,7 @@ int main(int argc, char **argv) {
 	}
 
 	try {
-		coinBase = new BitcoinExchange("data.csv");
+		coinBase = new BitcoinExchange(DATABASE);
 	} catch (std::exception & e) {
 		std::cerr << SYS_MSG << RED << e.what() << "\n"R;
 		delete coinBase;
@@ -42,36 +51,73 @@ int main(int argc, char **argv) {
 
 bool fetchDates(std::string const & filename, BitcoinExchange & exchange) {
 	std::ifstream infile(filename, std::ios_base::in);
-	std::string line, date, value;
-	float realValue;
-	char *pEnd;
+	std::string line;
+	char date[11];
+	int numCharsRead, errorCode = 0;
+	float numericValue = -1;
 
 	if (!infile) {
 		std::cerr << SYS_MSG << RED << "ERROR: could not open file 'data.csv'\n"R;
 		return false;
 	}
 	while (getline(infile, line)) {
-		date = line.substr(0, line.find(' '));
-		value = line.substr(line.find('|') + 1);
-		realValue = exchange.getPrice(date) * strtof(value.c_str(), &pEnd);
-		std::cout << date <<  " => " << strtof(value.c_str(), &pEnd) << " = " << realValue << "\n";
+		if (sscanf(line.c_str(), "%11s | %f%n", date, &numericValue, &numCharsRead) == 2) {
+			if (numCharsRead != static_cast<int>(line.length())){
+				errorCode = 1;
+			}
+			isValidDate(date, errorCode);
+			isValidPrice(numericValue, errorCode);
+		}
+		else
+			errorCode = 1;
+		if (errorCode) {
+			printError(errorCode, line.c_str());
+		}
+		else {
+			float realValue = exchange.getPrice(date);
+			std::cout << date << " => " << numericValue << " = " << realValue << "\n";
+		}
 	}
 	return true;
 }
 
-bool isValidDate(std::string const & date) {
+void printError(const int errorCode, const char *line) {
+	std::string errorMessages[] = {"bad input => ", "invalid date => ", "not a positive number =>", "too large a number =>"};
 
-	return true;
+	std::cout << RED"Error: "R << errorMessages[errorCode - 1] << line << "\n";
 }
 
-bool isValidPrice(char const *pEnd, float const numPrice, std::string const & price) {
-	if (*pEnd) {
-		std::cout << YELLOW"bad input => " << price << "\n"R;
-		return false;
+void isValidPrice(const float price, int & errorCode) {
+	if (price < 0 || price > 1000)
+		errorCode = 3;
+}
+
+void isValidDate(const char *date, int &errorCode) {
+	int year, month, day, charsRead;
+
+	if (date[11] || !date[10]) {
+		errorCode = 1;
+		return ;
 	}
-	if (numPrice < 0) {
-		std::cout << YELLOW"Error: not a positive number.\n"R;
-		return false;
+	if (sscanf(date, "%4d-%2d-%2d%n", &year,  &month, &day, &charsRead) != 3) {
+		errorCode = 2;
+		return ;
 	}
-	return true;
+	if (charsRead != 10) {
+		std::cout << "chars read";
+		errorCode = 2;
+		return ;
+	}
+	if (year < 0 || year > 9999) {
+		errorCode = 2;
+		return ;
+	}
+	if (month < 0 || month > 31) {
+		errorCode = 2;
+		return ;
+	}
+	if (day < 0 || day > 31) {
+		errorCode = 2;
+		return ;
+	}
 }
