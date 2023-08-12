@@ -113,7 +113,7 @@ int main(int argc, char **argv) {
 		delete coinBase;
 		return 1;
 	}
-	if (fetchDates(argv[1], *coinBase) == false) {
+	if (!fetchDates(argv[1], *coinBase)) {
 		delete coinBase;
 		return 1;
 	}

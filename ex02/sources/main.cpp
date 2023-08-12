@@ -26,8 +26,11 @@ int main(int argc, char **argv) {
 	std::vector<int> vec;
 	std::deque<int> deq;
 
-	if (argc == 1 || !PmergeMe::checkArgs(argv + 1)) {
-		std::cout << SYS << RED"ERROR: please provide arguments to be sorted\n"R;
+	if (argc == 1) {
+		std::cout << RED"ERROR: please provide arguments to be sorted\n"R;
+		return 1;
+	}
+	else if (!PmergeMe::checkArgs(argv + 1)) {
 		return 1;
 	}
 

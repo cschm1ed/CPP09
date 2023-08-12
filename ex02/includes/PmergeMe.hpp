@@ -42,6 +42,8 @@ public:
 
 private:
 
+	PmergeMe();
+
 	template<typename container>
 	static void mergeSort(typename container::iterator start, typename container::iterator end);
 
@@ -57,8 +59,6 @@ private:
 	static void binaryInsertionSort(container &S, container &pend);
 
 	static bool isInt(char *str);
-
-	PmergeMe();
 
 };
 
