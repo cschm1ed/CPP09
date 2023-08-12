@@ -47,85 +47,72 @@ long PmergeMe::measureSortTime(T &cont) {
 }
 
 template<typename T>
-double PmergeMe::FJMIS(T &cont) {
-	int straggler = -1;
-	int tmp;
-	std::vector<std::vector<int> > pairs;
+void PmergeMe::FJMIS(T &cont) {
+	int tmp, straggler = -1;
+	std::vector<std::vector<int> >	pairs;
+	std::vector<std::vector<int> >::iterator itPairs;
 	typename T::iterator it;
-	typename T::const_iterator ite;
+
 
 	if (cont.size() % 2) {
 		straggler = cont.back();
-		cont.pop_back;
+		cont.pop_back();
 	}
-	for (it = cont.begin(); it != ite; it += 2) {
-		pairs[it - cont.begin() / 2][0] = *it;
-		pairs[it - cont.begin() / 2][1] = *(it + 1);
+	for (it = cont.begin(); it != cont.end(); it += 2) {
+		std::vector<int> pair;
+		pair.push_back(*it);
+		pair.push_back(*(it + 1));
+		pairs.push_back(pair);
 	}
 
-	ite = pairs.end();
-	for (it = pairs.begin(); it != ite; ++it) {
-		if ((*it)[0] > (*it)[1]) {
-			tmp = (*it)[0];
-			(*it)[0] = (*it)[1];
-			(*it)[1] = tmp;
+	for (itPairs = pairs.begin(); itPairs != pairs.end(); ++itPairs) {
+		if ((*itPairs)[0] > (*itPairs)[1]) {
+			tmp = (*itPairs)[0];
+			(*itPairs)[0] = (*itPairs)[1];
+			(*itPairs)[1] = tmp;
 		}
 	}
 
+	mergeSort(pairs.begin(), pairs.end());
 
-	std::vector<int> S;
-	std::vector<int> pend;
+	T S;
+	T pend;
 
-	ite = pairs.end();
-	for (it = pairs.begin(); it != ite; ++it) {
-		S.push_back((*it)[1]);
-		pend.push_back((*it)[0]);
+	for (itPairs = pairs.begin(); itPairs != pairs.end(); ++itPairs) {
+		S.push_back((*itPairs)[1]);
+		pend.push_back((*itPairs)[0]);
 	}
 	if (straggler != -1)
 		pend.push_back(straggler);
-	PmergeMe::binaryInsertionSortVector(S, pend);
+	PmergeMe::binaryInsertionSort(S, pend);
+	if (straggler != -1) {
+		S.insert(PmergeMe::findLocation<T>(straggler, S.begin(), S.end()), straggler);
+	}
 }
 
 template<typename T>
-void PmergeMe::binaryInsertionSortVector(T & dst, T & src) {
+void PmergeMe::binaryInsertionSort(T & dst, T & src) {
 	typename T::const_iterator itSrc;
 	typename T::iterator itDest;
+	typename T::iterator pos;
 
-
+	for (itSrc = src.begin(); itSrc != src.end(); ++itSrc) {
+		pos = PmergeMe::findLocation<T>(*itSrc, dst.begin(), dst.end());
+		dst.insert(pos, *itSrc);
+	}
 }
 
-
-
 template<typename T>
-void PmergeMe::mergeSort(typename T::iterator start, typename T::iterator end) {
+typename T::iterator PmergeMe::findLocation(int value, typename T::iterator start, typename T::iterator end) {
+	typename T::iterator mid;
+
 	if (end - start <= 1)
-		return ;
-	typename T::iterator mid = start + (end - start / 2);
-
-	mergeSort(start, mid);
-	mergeSort(mid, end);
-	merge(start, mid, end);
-}
-
-template<typename T>
-void PmergeMe::merge(typename T::iterator start, typename T::iterator mid, typename T::iterator end) {
-	T tmp;
-	typename T::iterator left = start;
-	typename T::iterator right = mid;
-
-	while (left != mid || right != end) {
-		if ((left != mid && (*left)[1] < (*right)[1]) || right == end) {
-			tmp.push_back(*left);
-			left ++;
-		}
-		else {
-			tmp.push_back(*right);
-			*right ++;
-		}
+		return start;
+	if (*start <= value && *(start + 1)  >= value) {
+		return start;
 	}
-	typename T::iterator itTmp;
-	for (itTmp = tmp.begin(); itTmp != tmp.end(); ++itTmp) {
-		*start = *itTmp;
-		start ++;
-	}
+	mid = start + ((end - start) / 2);
+	if (*mid > value)
+		return PmergeMe::findLocation<T>(value, start, mid);
+	return PmergeMe::findLocation<T>(value, mid, end);
 }

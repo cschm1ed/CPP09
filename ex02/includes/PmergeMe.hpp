@@ -37,23 +37,22 @@ public:
 	static void printContainer(const T &container);
 
 	template<typename T>
-	static double FJMIS(T & cont);
+	static void FJMIS(T & cont);
 
 	template<typename T>
 	static long measureSortTime(T & cont);
 
-	template<typename T>
-	static void merge(typename T::iterator start, typename T::iterator mid, typename T::iterator end);
+	static void merge(std::vector<std::vector<int> >::iterator start, std::vector<std::vector<int> >::iterator mid, std::vector<std::vector<int> >::iterator end);
+
+	static void mergeSort(std::vector<std::vector<int> >::iterator start, std::vector<std::vector<int> >::iterator end);
 
 	template<typename T>
-	static void mergeSort(typename T::iterator start, typename T::iterator end);
-
-	template<typename T>
-	static void binaryInsertionSortVector(T & dst, T & src);
-
-	friend std::ostream &operator<<(std::ostream &os, const PmergeMe &me);
+	static void binaryInsertionSort(T & dst, T & src);
 
 private:
+
+	template<typename T>
+	static typename T::iterator findLocation(int val, typename T::iterator start, typename T::iterator end);
 
 	static bool isInt(char *str);
 
