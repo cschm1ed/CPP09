@@ -42,8 +42,14 @@ public:
 	template<typename T>
 	static long measureSortTime(T & cont);
 
-	static void mergeSortVector(std::vector<std::vector<int> > & vec);
-	static void binaryInsertionSortVector(std::vector<int> & dst, std::vector<int> & src);
+	template<typename T>
+	static void merge(typename T::iterator start, typename T::iterator mid, typename T::iterator end);
+
+	template<typename T>
+	static void mergeSort(typename T::iterator start, typename T::iterator end);
+
+	template<typename T>
+	static void binaryInsertionSortVector(T & dst, T & src);
 
 	friend std::ostream &operator<<(std::ostream &os, const PmergeMe &me);
 

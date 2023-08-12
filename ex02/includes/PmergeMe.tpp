@@ -72,7 +72,6 @@ double PmergeMe::FJMIS(T &cont) {
 		}
 	}
 
-	PmergeMe::mergeSortVector(pairs);
 
 	std::vector<int> S;
 	std::vector<int> pend;
@@ -87,21 +86,46 @@ double PmergeMe::FJMIS(T &cont) {
 	PmergeMe::binaryInsertionSortVector(S, pend);
 }
 
-void PmergeMe::binaryInsertionSortVector(std::vector<int> &dst, std::vector<int> &src) {
-	std::vector<int>::const_iterator itSrc;
-	std::vector<int>::iterator itDest;
+template<typename T>
+void PmergeMe::binaryInsertionSortVector(T & dst, T & src) {
+	typename T::const_iterator itSrc;
+	typename T::iterator itDest;
 
-	for (itSrc = src.begin(); itSrc != src.end(); ++itSrc) {
-		int insert = *itSrc;
 
-		itDest = dst.begin();
-		while (*itDest < insert) {
-			itDest += itDest - dst.end();
-
-		}
-	}
 }
 
-void PmergeMe::mergeSortVector(std::vector<std::vector<int> > &vec) {
 
+
+template<typename T>
+void PmergeMe::mergeSort(typename T::iterator start, typename T::iterator end) {
+	if (end - start <= 1)
+		return ;
+	typename T::iterator mid = start + (end - start / 2);
+
+	mergeSort(start, mid);
+	mergeSort(mid, end);
+	merge(start, mid, end);
+}
+
+template<typename T>
+void PmergeMe::merge(typename T::iterator start, typename T::iterator mid, typename T::iterator end) {
+	T tmp;
+	typename T::iterator left = start;
+	typename T::iterator right = mid;
+
+	while (left != mid || right != end) {
+		if ((left != mid && (*left)[1] < (*right)[1]) || right == end) {
+			tmp.push_back(*left);
+			left ++;
+		}
+		else {
+			tmp.push_back(*right);
+			*right ++;
+		}
+	}
+	typename T::iterator itTmp;
+	for (itTmp = tmp.begin(); itTmp != tmp.end(); ++itTmp) {
+		*start = *itTmp;
+		start ++;
+	}
 }
