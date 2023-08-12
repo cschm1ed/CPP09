@@ -52,35 +52,3 @@ bool PmergeMe::isInt(char *str) {
 
 	return true;
 }
-
-void PmergeMe::mergeSort(std::vector<std::vector<int> >::iterator start, std::vector<std::vector<int> >::iterator end) {
-	if (end - start <= 1)
-		return ;
-	std::vector<std::vector<int> >::iterator mid = start + ((end - start) / 2);
-
-	mergeSort(start, mid);
-	mergeSort(mid, end);
-	merge(start, mid, end);
-}
-
-void PmergeMe::merge(std::vector<std::vector<int> >::iterator start, std::vector<std::vector<int> >::iterator mid, std::vector<std::vector<int> >::iterator end) {
-	std::vector<std::vector<int> > tmp;
-	std::vector<std::vector<int> >::iterator left = start;
-	std::vector<std::vector<int> >::iterator right = mid;
-
-	while (left != mid || right != end) {
-		if ((left != mid && (*left)[1] < (*right)[1]) || right == end) {
-			tmp.push_back(*left);
-			left ++;
-		}
-		else {
-			tmp.push_back(*right);
-			*right ++;
-		}
-	}
-	std::vector<std::vector<int> >::iterator itTmp;
-	for (itTmp = tmp.begin(); itTmp != tmp.end(); ++itTmp) {
-		*start = *itTmp;
-		start ++;
-	}
-}
